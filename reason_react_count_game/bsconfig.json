@@ -1,9 +1,9 @@
 {
   "name": "reason-scripts",
-  "sources": ["src", "src/components"],
+  "sources": ["src", "src/components", "src/lib"],
   "bs-dependencies": ["reason-react", "@glennsl/bs-jest", "bs-fetch"],
   "reason": {
-    "react-jsx": 2
+    "react-jsx": 3
   },
   "refmt": 3,
   "package-specs": {
