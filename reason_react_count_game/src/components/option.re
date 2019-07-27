@@ -1,0 +1,19 @@
+// //////////////////////////////////////////////////////////
+// TYPE DEFINITION
+// //////////////////////////////////////////////////////////
+type state = {
+  gameStatus: string,
+  selected: bool,
+};
+
+// //////////////////////////////////////////////////////////
+// COMPONENT
+// /////////////////////////////////////////////////////////
+[@react.component]
+let make = (~value: int, ~gameStatus: string, ~selectOption, ~deselectOption) => {
+  <div className="col-6 col">
+    <button className="btn-block">
+      {React.string(string_of_int(value))}
+    </button>
+  </div>;
+};

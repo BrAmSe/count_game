@@ -1,3 +1,6 @@
+// //////////////////////////////////////////////////////////
+// TYPE DEFINITION
+// //////////////////////////////////////////////////////////
 type state = {
   gameStatus: string,
   initialSeconds: int,
@@ -7,6 +10,9 @@ type state = {
 type action =
   | SaveFields;
 
+// //////////////////////////////////////////////////////////
+// FUNCTIONS
+// /////////////////////////////////////////////////////////
 let generateOptions =
     (challengeSize: int, challengeRange: (int, int), answerSize: int) => {
   let (minValue, maxValue) = challengeRange;
@@ -18,6 +24,9 @@ let generateOptions =
   (challengeOptions, targetValue);
 };
 
+// //////////////////////////////////////////////////////////
+// COMPONENT
+// /////////////////////////////////////////////////////////
 [@react.component]
 let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
   let (gameStatus, setGameStatus) = React.useState(() => "new");
@@ -27,18 +36,41 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
   let (challengeOptions, targetValue) =
     generateOptions(challengeSize, challengeRange, answerSize);
 
-  <div className="game">
-    <div className="help">
-      {React.string(
-         "Pick numbers that sum to the target in "
-         ++ string_of_int(initialSeconds)
-         ++ " seconds",
-       )}
+  // //////////////////////////////////////////////////////////
+  // RENDERS
+  // /////////////////////////////////////////////////////////
+  let renderChallengeOptions = challengeOptions => {
+    List.mapi(
+      (index, option) =>
+        <Option
+          key={string_of_int(index)}
+          value=option
+          gameStatus
+          selectOption={() => {}}
+          deselectOption={() => {}}
+        />,
+      challengeOptions,
+    );
+  };
+
+  <div className="row flex-center">
+    <div className="md-8 col">
+      <h3>
+        {React.string(
+           "Pick numbers that sum to the target in "
+           ++ string_of_int(initialSeconds)
+           ++ " seconds",
+         )}
+      </h3>
+      <div className="row flex-center">
+        <Target value=targetValue status=gameStatus />
+      </div>
+      <div className="row">
+        {React.array(
+           Array.of_list(renderChallengeOptions(challengeOptions)),
+         )}
+      </div>
     </div>
-    <Target value=targetValue status=gameStatus />
   </div>;
-  /* <div className="challenge-numbers">
-       {this.renderChallengeNumbers()}
-     </div>
-     {this.renderFooter()}*/
+  /*{this.renderFooter()}*/
 };
