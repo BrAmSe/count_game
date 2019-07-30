@@ -36,7 +36,6 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
       Utils.sum(
         Utils.arrSample(Array.of_list(challengeOptions), answerSize),
       );
-    Js.log(Array.of_list(challengeOptions));
     (challengeOptions, targetValue);
   };
 
@@ -86,7 +85,10 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
 
   let onGameReset = () => {
     setGameStatus(_ => "new");
-    onGameStart();
+  };
+
+  let onTimeUp = () => {
+    setGameStatus(_ => "lost");
   };
 
   // //////////////////////////////////////////////////////////
@@ -119,7 +121,7 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
           value=initialSeconds
           onStart=onGameStart
           onReset=onGameReset
-          onFinish={_ => {}}
+          onFinish=onTimeUp
         />
       </div>;
     };

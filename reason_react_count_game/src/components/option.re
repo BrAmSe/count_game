@@ -26,6 +26,7 @@ let make = (~value: int, ~gStatus: string, ~selectOption, ~deselectOption) => {
   // /////////////////////////////////////////////////////////
   React.useEffect1(
     () => {
+      Js.log(gStatus);
       if (gStatus == "playing") {
         setDisabled(_ => false);
         setSelected(_ => false);

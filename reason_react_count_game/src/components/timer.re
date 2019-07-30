@@ -1,7 +1,10 @@
 // //////////////////////////////////////////////////////////
 // TYPE DEFINITION
 // //////////////////////////////////////////////////////////
-type state = {running: bool};
+type state = {
+  running: bool,
+  timeRemaining: int,
+};
 
 // //////////////////////////////////////////////////////////
 // COMPONENT
@@ -17,13 +20,37 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
   // //////////////////////////////////////////////////////////
   // EFFECTS
   // /////////////////////////////////////////////////////////
+  React.useEffect1(
+    () => {
+      let timerId =
+        Js.Global.setInterval(
+          () => setTimeRemaining(timeRemaining => timeRemaining - 1),
+          1000,
+        );
+      if (!running) {
+        Js.Global.clearInterval(timerId);
+      };
+      Some(() => Js.Global.clearInterval(timerId));
+    },
+    [|running|],
+  );
+
+  React.useEffect1(
+    () => {
+      if (timeRemaining <= 0) {
+        setRunning(_ => false);
+        onFinish();
+      };
+      None;
+    },
+    [|timeRemaining|],
+  );
 
   // //////////////////////////////////////////////////////////
   // EVENTS
   // /////////////////////////////////////////////////////////
   let onClickStart = () =>
     if (!running) {
-      setTimeRemaining(_ => value);
       setRunning(_ => true);
       onStart();
     };
@@ -31,6 +58,7 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
   let onClickReset = () =>
     if (running) {
       setTimeRemaining(_ => value);
+      setRunning(_ => false);
       onReset();
     };
 
@@ -50,9 +78,7 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
 
   <div className="row">
     <div className="col-10 col flex-center">
-      <div className="headings">
-        {React.string(string_of_int(timeRemaining))}
-      </div>
+      <p> {React.string(string_of_int(timeRemaining))} </p>
     </div>
     <div className="col-2 col flex-right"> {renderButton()} </div>
   </div>;
