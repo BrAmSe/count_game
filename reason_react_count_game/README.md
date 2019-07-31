@@ -1,4 +1,4 @@
-![alt cover image](https://drive.google.com/file/d/1c0DGhnwZwDcsQgO_P-gAPtAcCKwoo6YD/view?usp=sharing)
+![alt cover image](https://drive.google.com/uc?export=view&id=1c0DGhnwZwDcsQgO_P-gAPtAcCKwoo6YD)
 
 Achieve the excellence in the sum operation with this easy to play, difficult to master math game.
 
