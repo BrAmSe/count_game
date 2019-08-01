@@ -1,13 +1,15 @@
 [%bs.raw {|require('papercss/dist/paper.css')|}];
+[%bs.raw {|require('./styles.css')|}];
 
 [@bs.module] external logo: string = "./logo.svg";
 
 [@react.component]
-let make = (~message) => {
+let make = () => {
   <div className="row site flex-center">
     <div className="md-10 col">
       <div className="paper">
         <div className="row flex-center">
+          <img className="no-border logo" src="./count_mathcula.png" />
           <div className="text-center">
             <h1> {React.string("Count Mathcula")} </h1>
             <h3> {React.string("The most nobleman math game ever!")} </h3>
