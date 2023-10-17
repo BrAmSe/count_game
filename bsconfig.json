@@ -1,14 +1,22 @@
 {
-  "name": "reason-scripts",
-  "sources": ["src", "src/components", "src/lib"],
-  "bs-dependencies": ["reason-react", "@glennsl/bs-jest", "bs-fetch"],
-  "reason": {
-    "react-jsx": 3
-  },
-  "refmt": 3,
+  "name": "count-mathcula",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
   "package-specs": {
-    "module": "commonjs",
-    "in-source": true
+    "module": "es6",
+    "in-source": true,
+    "suffix": ".mjs"
   },
-  "suffix": ".bs.js"
+  "jsx": { "version": 4, "mode": "automatic" },
+  "bs-dependencies": [
+    "@rescript/core",
+    "@rescript/react"
+  ],
+  "bsc-flags": [
+    "-open RescriptCore"
+  ]
 }

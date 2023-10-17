@@ -9,7 +9,7 @@ type state = {
 // //////////////////////////////////////////////////////////
 // COMPONENT
 // /////////////////////////////////////////////////////////
-[@react.component]
+@react.component
 let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
   // //////////////////////////////////////////////////////////
   // STATE
@@ -32,7 +32,7 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
       };
       Some(() => Js.Global.clearInterval(timerId));
     },
-    [|running|],
+    [running],
   );
 
   React.useEffect1(
@@ -43,7 +43,7 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
       };
       None;
     },
-    [|timeRemaining|],
+    [timeRemaining],
   );
 
   // //////////////////////////////////////////////////////////

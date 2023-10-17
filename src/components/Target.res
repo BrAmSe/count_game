@@ -13,7 +13,7 @@ let targetClass = (status: string) => {
 // //////////////////////////////////////////////////////////
 // COMPONENT
 // /////////////////////////////////////////////////////////
-[@react.component]
+@react.component
 let make = (~value: int, ~status: string) => {
   <h1>
     <span className={targetClass(status)}>

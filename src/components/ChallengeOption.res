@@ -13,7 +13,7 @@ let getDisabledStyle = disabled => if (disabled) {" disabled"} else {""};
 // //////////////////////////////////////////////////////////
 // COMPONENT
 // /////////////////////////////////////////////////////////
-[@react.component]
+@react.component
 let make = (~value: int, ~gStatus: string, ~selectOption, ~deselectOption) => {
   // //////////////////////////////////////////////////////////
   // STATE
@@ -35,7 +35,7 @@ let make = (~value: int, ~gStatus: string, ~selectOption, ~deselectOption) => {
       };
       None;
     },
-    [|gStatus|],
+    [gStatus],
   );
 
   // //////////////////////////////////////////////////////////

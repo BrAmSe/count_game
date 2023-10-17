@@ -9,11 +9,12 @@
 # production
 /build
 
-# bucklescript
+# rescript
 /lib
 /types
 .merlin
 *.bs.js
+*.mjs
 
 # misc
 .DS_Store

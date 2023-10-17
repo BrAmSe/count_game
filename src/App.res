@@ -1,9 +1,7 @@
-[%bs.raw {|require('papercss/dist/paper.css')|}];
-[%bs.raw {|require('./styles.css')|}];
+%%raw("import * as papercss from 'papercss/dist/paper.css';")
+%%raw("import * as styles from './styles.css';")
 
-[@bs.module] external logo: string = "./logo.svg";
-
-[@react.component]
+@react.component
 let make = () => {
   <div className="row site flex-center">
     <div className="md-10 col">

@@ -13,7 +13,7 @@ type action =
 // //////////////////////////////////////////////////////////
 // COMPONENT
 // /////////////////////////////////////////////////////////
-[@react.component]
+@react.component
 let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
   // //////////////////////////////////////////////////////////
   // STATE
@@ -21,7 +21,7 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
   let (gameStatus, setGameStatus) = React.useState(() => "new");
   let (initialSeconds, setInitialSeconds) = React.useState(() => iSeconds);
   let (accum, setAccum) = React.useState(() => 0);
-  let (challengeOptions, setChallengeOptions) = React.useState(() => []);
+  let (challengeOptions, setChallengeOptions) = React.useState(() => list{});
   let (targetValue, setTargetValue) = React.useState(() => 0);
 
   // //////////////////////////////////////////////////////////
@@ -32,11 +32,10 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
     let (minValue, maxValue) = challengeRange;
     let challengeOptions =
       Utils.randomListOfSize(minValue, maxValue, challengeSize);
-    let targetValue =
-      Utils.sum(
-        Utils.arrSample(Array.of_list(challengeOptions), answerSize),
-      );
-    (challengeOptions, targetValue);
+    switch(Utils.listSample(challengeOptions, answerSize)) {
+      | None => failwith("This should never happen")
+      | Some(randomNumberList) => (challengeOptions, Utils.sum(randomNumberList))
+    }
   };
 
   let selectOption = (targetValue, value) =>
@@ -95,21 +94,21 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
   // RENDERS
   // /////////////////////////////////////////////////////////
   let renderChallengeOptions = challengeOptions => {
-    List.mapi(
-      (index, option) =>
-        <Option
+    List.mapWithIndex(
+      challengeOptions,
+      (index, challengeOption) =>
+        <ChallengeOption
           key={string_of_int(index)}
-          value=option
+          value=challengeOption
           gStatus=gameStatus
           selectOption={selectOption(targetValue)}
           deselectOption
-        />,
-      challengeOptions,
+        />
     );
   };
 
   let renderFooter = () =>
-    if (List.exists(gStatus => gStatus == gameStatus, ["won", "lost"])) {
+    if (Array.includes(["won", "lost"], gameStatus)) {
       <div className="col-12 col flex-right">
         <button className="btn" onClick={_evt => onClickPlayAgain()}>
           {React.string("Play Again")}
@@ -140,7 +139,7 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
       </div>
       <div className="row">
         {React.array(
-           Array.of_list(renderChallengeOptions(challengeOptions)),
+           List.toArray(renderChallengeOptions(challengeOptions)),
          )}
       </div>
       <div className="row"> {renderFooter()} </div>
