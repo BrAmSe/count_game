@@ -6,51 +6,44 @@ type state = {selected: bool};
 // //////////////////////////////////////////////////////////
 // FUNCTIONS
 // //////////////////////////////////////////////////////////
-let getSelectedStyle = selected => if (selected) {" btn-secondary"} else {""};
-
-let getDisabledStyle = disabled => if (disabled) {" disabled"} else {""};
+let getSelectedStyle = selected => if (selected) {" btn-secondary"} else {""}
+let getDisabledStyle = disabled => if (disabled) {" disabled"} else {""}
 
 // //////////////////////////////////////////////////////////
 // COMPONENT
 // /////////////////////////////////////////////////////////
 @react.component
-let make = (~value: int, ~gStatus: string, ~selectOption, ~deselectOption) => {
+let make = (~value: int, ~disabled: bool, ~selectOption, ~deselectOption) => {
   // //////////////////////////////////////////////////////////
   // STATE
   // /////////////////////////////////////////////////////////
-  let (selected, setSelected) = React.useState(() => false);
-  let (disabled, setDisabled) = React.useState(() => true);
+  let (selected, setSelected) = React.useState(() => false)
 
   // //////////////////////////////////////////////////////////
   // EFFECTS
   // /////////////////////////////////////////////////////////
   React.useEffect1(
     () => {
-      Js.log(gStatus);
-      if (gStatus == "playing") {
-        setDisabled(_ => false);
-        setSelected(_ => false);
-      } else {
-        setDisabled(_ => true);
-      };
-      None;
+      setSelected(_ => false)
+      None
     },
-    [gStatus],
-  );
+    [disabled],
+  )
 
   // //////////////////////////////////////////////////////////
   // EVENTS
   // /////////////////////////////////////////////////////////
-  let onClick = () =>
+  let onClick = () => {
     if (!disabled) {
+      setSelected(prev => !prev)
       if (selected) {
-        setSelected(_ => false);
-        deselectOption(value);
+        deselectOption(value)
       } else {
-        setSelected(_ => true);
-        selectOption(value);
-      };
-    };
+        selectOption(value)
+      }
+    }
+  }
+
   // //////////////////////////////////////////////////////////
   // RENDERS
   // /////////////////////////////////////////////////////////
@@ -64,5 +57,5 @@ let make = (~value: int, ~gStatus: string, ~selectOption, ~deselectOption) => {
       }>
       {React.string(string_of_int(value))}
     </button>
-  </div>;
-};
+  </div>
+}

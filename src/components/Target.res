@@ -7,8 +7,8 @@ let targetClass = (status: string) => {
   | "won" => "badge success"
   | "lost" => "badge danger"
   | _ => "badge"
-  };
-};
+  }
+}
 
 // //////////////////////////////////////////////////////////
 // COMPONENT
@@ -19,5 +19,5 @@ let make = (~value: int, ~status: string) => {
     <span className={targetClass(status)}>
       {React.string(string_of_int(value))}
     </span>
-  </h1>;
-};
+  </h1>
+}

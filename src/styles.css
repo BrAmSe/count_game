@@ -2,3 +2,12 @@
   height: 200px;
   width: 144.64px;
 }
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+h3 {
+  margin: 0;
+}

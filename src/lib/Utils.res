@@ -8,17 +8,18 @@ let rec sum = (list) => {
     | list{head, ...tail} => head + sum(tail)
     | list{} => failwith("This should never happen")
   }
-};
+}
 
 let randomNumber = (min, max) => {
-  Random.init(int_of_float(Js.Date.now()));
-  let random = Random.int(max - min);
-  random + min;
-};
+  Random.init(int_of_float(Js.Date.now()))
+  let random = Random.int(max - min)
+  random + min
+}
 
-let rec randomListOfSize = (min: int, max: int, size: int) =>
+let rec randomListOfSize = (min: int, max: int, size: int) =>{
   if (size <= 0) {
     list{}
   } else {
     list{randomNumber(min, max), ...randomListOfSize(min, max, size - 1)}
-  };
+  }
+}

@@ -4,7 +4,7 @@
 type state = {
   running: bool,
   timeRemaining: int,
-};
+}
 
 // //////////////////////////////////////////////////////////
 // COMPONENT
@@ -14,8 +14,8 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
   // //////////////////////////////////////////////////////////
   // STATE
   // /////////////////////////////////////////////////////////
-  let (running, setRunning) = React.useState(() => false);
-  let (timeRemaining, setTimeRemaining) = React.useState(() => value);
+  let (running, setRunning) = React.useState(() => false)
+  let (timeRemaining, setTimeRemaining) = React.useState(() => value)
 
   // //////////////////////////////////////////////////////////
   // EFFECTS
@@ -26,60 +26,61 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
         Js.Global.setInterval(
           () => setTimeRemaining(timeRemaining => timeRemaining - 1),
           1000,
-        );
+        )
       if (!running) {
-        Js.Global.clearInterval(timerId);
-      };
-      Some(() => Js.Global.clearInterval(timerId));
+        Js.Global.clearInterval(timerId)
+      }
+      Some(() => Js.Global.clearInterval(timerId))
     },
     [running],
-  );
+  )
 
   React.useEffect1(
     () => {
       if (timeRemaining <= 0) {
-        setRunning(_ => false);
-        onFinish();
-      };
-      None;
+        setRunning(_ => false)
+        onFinish()
+      }
+      None
     },
     [timeRemaining],
-  );
+  )
 
   // //////////////////////////////////////////////////////////
   // EVENTS
   // /////////////////////////////////////////////////////////
   let onClickStart = () =>
     if (!running) {
-      setRunning(_ => true);
-      onStart();
-    };
+      setRunning(_ => true)
+      onStart()
+    }
 
   let onClickReset = () =>
     if (running) {
-      setTimeRemaining(_ => value);
-      setRunning(_ => false);
-      onReset();
-    };
+      setTimeRemaining(_ => value)
+      setRunning(_ => false)
+      onReset()
+    }
 
   // //////////////////////////////////////////////////////////
   // RENDERS
   // /////////////////////////////////////////////////////////
-  let renderButton = () =>
+  let renderButton = () => {
     if (!running) {
       <button className="btn btn-success" onClick={_evt => onClickStart()}>
         {React.string("Start")}
-      </button>;
+      </button>
     } else {
       <button className="btn btn-primary" onClick={_evt => onClickReset()}>
         {React.string("Reset")}
-      </button>;
-    };
+      </button>
+    }
+  }
 
-  <div className="row">
+  <aside className="row flex-middle">
     <div className="col-10 col flex-center">
-      <p> {React.string(string_of_int(timeRemaining))} </p>
+      <h3> {React.string(string_of_int(timeRemaining))} </h3>
     </div>
     <div className="col-2 col flex-right"> {renderButton()} </div>
-  </div>;
-};
+  </aside>
+}
