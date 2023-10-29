@@ -5,6 +5,7 @@
     "papercss": "^1.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
     "rescript": "^10.1.4"
   },
   "scripts": {

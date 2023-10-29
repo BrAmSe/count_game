@@ -1,4 +1,11 @@
 // //////////////////////////////////////////////////////////
+// IMPORTS
+// //////////////////////////////////////////////////////////
+module FaGear = {
+  @module("react-icons/fa6") @react.component external make: () => React.element = "FaGear"
+}
+
+// //////////////////////////////////////////////////////////
 // TYPE DEFINITION
 // //////////////////////////////////////////////////////////
 type state = {
@@ -77,10 +84,10 @@ let make = (~value: int, ~onStart, ~onReset, ~onFinish) => {
     }
   }
 
-  <aside className="row flex-middle">
-    <div className="col-10 col flex-center">
-      <h3> {React.string(string_of_int(timeRemaining))} </h3>
-    </div>
-    <div className="col-2 col flex-right"> {renderButton()} </div>
+  <aside className="row flex-edges">
+    <>
+      <h3 className="flex-center"> {React.string(string_of_int(timeRemaining))} </h3>
+    </>
+    {renderButton()}
   </aside>
 }

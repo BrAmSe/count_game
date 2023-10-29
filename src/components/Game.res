@@ -1,3 +1,10 @@
+module FaGear = {
+  @module("react-icons/fa6") @react.component external make: () => React.element = "FaGear"
+}
+
+@send external showModal: (Dom.element ) => unit = "showModal"
+@send external close: (Dom.element ) => unit = "close"
+
 // //////////////////////////////////////////////////////////
 // TYPE DEFINITION
 // //////////////////////////////////////////////////////////
@@ -18,22 +25,35 @@ type state = {
 // COMPONENT
 // /////////////////////////////////////////////////////////
 @react.component
-let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
+let make = (~iSeconds, ~challengeSize, ~challengeRange) => {
   // //////////////////////////////////////////////////////////
   // STATE
   // /////////////////////////////////////////////////////////
   let (gameStatus, setGameStatus) = React.useState(() => gameStatuses["new"])
+
   let (accum, setAccum) = React.useState(() => 0)
   let (challengeOptions, setChallengeOptions) = React.useState(() => list{})
   let (targetValue, setTargetValue) = React.useState(() => 0)
+  let (gameSettings, setGameSettings) = React.useState(() => {
+    let (minValue, maxValue) = challengeRange
+    {
+      "challengeSize": challengeSize,
+      "challengeMaxValue": maxValue,
+      "challengeMinValue": minValue
+    }
+  })
+
+  // //////////////////////////////////////////////////////////
+  // REFS
+  // /////////////////////////////////////////////////////////
+  let refModal = React.useRef(Js.Nullable.null)
 
   // //////////////////////////////////////////////////////////
   // FUNCTIONS
   // /////////////////////////////////////////////////////////
   let generateOptions =
-      (challengeSize, challengeRange) => {
-    let (minValue, maxValue) = challengeRange
-    Utils.randomListOfSize(minValue, maxValue, challengeSize)
+      (challengeSize, challengeMaxValue, challengeMinValue) => {
+    Utils.randomListOfSize(challengeMinValue, challengeMaxValue, challengeSize)
   }
 
   let selectOption = (targetValue, value) => {
@@ -47,51 +67,62 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
 
   let deselectOption = value => setAccum(prev => prev - value)
 
-  let generateTargetValue = (challengeOptions, answerSize) => {
-    switch(Utils.listSample(challengeOptions, answerSize)) {
+  let generateTargetValue = (challengeOptions) => {
+    switch(Utils.listSample(challengeOptions, Utils.randomNumber(2, gameSettings["challengeSize"] - 2))) {
       | None => failwith("This should never happen")
       | Some(randomNumberList) =>  Utils.sum(randomNumberList)
     }
   }
 
   let generateChallenge = () => {
-    let challengeOptions = generateOptions(challengeSize, challengeRange)
-    let targetValue = generateTargetValue(challengeOptions, answerSize)
+    let challengeOptions = generateOptions(gameSettings["challengeSize"], gameSettings["challengeMaxValue"], gameSettings["challengeMinValue"])
+    let targetValue = generateTargetValue(challengeOptions)
     setChallengeOptions(_ => challengeOptions)
     setTargetValue(_ => targetValue)
-  };
+  }
 
+  let openGameSettingsForm = () => {
+    refModal.current
+      ->Js.Nullable.toOption
+      ->Belt.Option.forEach(modal => modal -> showModal)
+  }
+
+  let closeGameSettingsForm = () => {
+    refModal.current
+      ->Js.Nullable.toOption
+      ->Belt.Option.forEach(modal => modal -> close)
+  }
   // //////////////////////////////////////////////////////////
   // EFFECTS
   // /////////////////////////////////////////////////////////
-  React.useEffect3(
+  React.useEffect1(
     () => {
       generateChallenge()
       None
     },
-    (challengeSize, challengeRange, answerSize),
-  );
+    [gameSettings]
+  )
 
   // //////////////////////////////////////////////////////////
   // EVENTS
   // /////////////////////////////////////////////////////////
   let onClickPlayAgain = () => {
     setGameStatus(_ => gameStatuses["new"])
-  };
+  }
 
   let onGameStart = () => {
     generateChallenge()
     setAccum(_ => 0)
     setGameStatus(_ => gameStatuses["playing"])
-  };
+  }
 
   let onGameReset = () => {
     setGameStatus(_ => gameStatuses["new"])
-  };
+  }
 
   let onTimeUp = () => {
     setGameStatus(_ => gameStatuses["lost"])
-  };
+  }
 
   // //////////////////////////////////////////////////////////
   // RENDERS
@@ -111,6 +142,16 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
     )
   }
 
+  let renderSettingsButton = () => {
+    if (gameStatuses["new"] == gameStatus) {
+      <button className="btn" onClick={_evt => openGameSettingsForm()}>
+        <FaGear/>
+      </button>
+    } else {
+      <></>
+    }
+  }
+
   let renderFooter = () => {
     if (gameStatuses["won"] == gameStatus || gameStatuses["lost"] == gameStatus) {
       <div className="col-12 col flex-right">
@@ -119,18 +160,28 @@ let make = (~iSeconds, ~challengeSize, ~challengeRange, ~answerSize) => {
         </button>
       </div>
     } else {
-      <div className="col-12">
+      <>
         <Timer
           value=iSeconds
           onStart=onGameStart
           onReset=onGameReset
           onFinish=onTimeUp
         />
-      </div>
+        {renderSettingsButton()}
+      </>
     }
   }
 
   <section>
+    <dialog ref={ReactDOM.Ref.domRef(refModal)}>
+      <GameSettingsForm
+        initialValues={gameSettings}
+        onSubmit={(values) => {
+          setGameSettings(_ => values)
+          closeGameSettingsForm()
+        }}
+      />
+    </dialog>
     <header className="row align-center flex-center">
       <h3>
         {React.string(

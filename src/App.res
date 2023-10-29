@@ -19,7 +19,6 @@ let make = () => {
           iSeconds=30
           challengeSize=6
           challengeRange=(1, 10)
-          answerSize=4
         />
       </div>
     </div>
